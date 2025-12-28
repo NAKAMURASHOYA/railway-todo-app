@@ -1,0 +1,9 @@
+/* src/components/Button.module.css */
+.button {
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}

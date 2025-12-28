@@ -1,16 +1,19 @@
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { PencilIcon } from '~/icons/PencilIcon';
 import { CheckIcon } from '~/icons/CheckIcon';
 import { updateTask } from '~/store/task';
 import './TaskItem.css';
+import Button from '~/components/Button.jsx';
+import PropTypes from 'prop-types';
+import { getRemainText } from '~/utils/getRemainText';
 
 export const TaskItem = ({ task }) => {
   const dispatch = useDispatch();
 
   const { listId } = useParams();
-  const { id, title, detail, done } = task;
+  const { id, title, detail, done, limit } = task;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -24,7 +27,7 @@ export const TaskItem = ({ task }) => {
   return (
     <div className="task_item">
       <div className="task_item__title_container">
-        <button
+        <Button
           type="button"
           onClick={handleToggle}
           disabled={isSubmitting}
@@ -40,11 +43,19 @@ export const TaskItem = ({ task }) => {
               aria-label="Incomplete"
             ></div>
           )}
-        </button>
+        </Button>
         <div className="task_item__title" data-done={done}>
           {title}
         </div>
         <div aria-hidden className="task_item__title_spacer"></div>
+        <div className="task_item__limit">
+          {limit && limit !== 'Invalid Date'
+            ? <>
+                期限: {new Date(limit).toLocaleString()}<br />
+                残り: {getRemainText(limit)}
+              </>
+            : '期限なし'}
+        </div>
         <Link
           to={`/lists/${listId}/tasks/${id}`}
           className="task_item__title_action"
@@ -55,4 +66,14 @@ export const TaskItem = ({ task }) => {
       <div className="task_item__detail">{detail}</div>
     </div>
   );
+};
+
+TaskItem.propTypes = {
+  task: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    title: PropTypes.string.isRequired,
+    detail: PropTypes.string,
+    done: PropTypes.bool.isRequired,
+    limit: PropTypes.string,
+  }).isRequired,
 };

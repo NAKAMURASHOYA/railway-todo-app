@@ -5,6 +5,8 @@ import { BackButton } from '~/components/BackButton';
 import './index.css';
 import { createList, setCurrentList } from '~/store/list/index';
 import { useId } from '~/hooks/useId';
+import Button from '~/components/Button.jsx';
+import Input from '~/components/Input.jsx';
 
 const NewList = () => {
   const id = useId();
@@ -48,7 +50,7 @@ const NewList = () => {
           <label htmlFor={`${id}-title`} className="new_list__form_label">
             Name
           </label>
-          <input
+          <Input
             id={`${id}-title`}
             className="app_input"
             placeholder="Family"
@@ -61,9 +63,9 @@ const NewList = () => {
             Cancel
           </Link>
           <div className="new_list__form_actions_spacer"></div>
-          <button type="submit" className="app_button" disabled={isSubmitting}>
+          <Button type="submit" className="app_button" disabled={isSubmitting}>
             Create
-          </button>
+          </Button>
         </div>
       </form>
     </main>

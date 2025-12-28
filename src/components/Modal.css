@@ -1,0 +1,14 @@
+/* Modal.css */
+.ReactModal__Overlay {
+  background: rgba(0,0,0,0.6);
+  z-index: 1000;
+}
+
+.ReactModal__Content {
+  border-radius: 8px;
+  padding: 2em;
+  background: white;
+  width: 80vw;
+  max-width: 420px;
+  margin: auto;
+}

@@ -1,7 +1,9 @@
-import { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { BackButton } from '~/components/BackButton';
+import Input from '~/components/Input.jsx';
+import Button from '~/components/Button.jsx';
 import './index.css';
 import { setCurrentList } from '~/store/list';
 import { fetchTasks, updateTask, deleteTask } from '~/store/task';
@@ -17,6 +19,7 @@ const EditTask = () => {
   const [title, setTitle] = useState('');
   const [detail, setDetail] = useState('');
   const [done, setDone] = useState(false);
+  const [limit, setLimit] = useState('');
 
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,6 +33,7 @@ const EditTask = () => {
       setTitle(task.title);
       setDetail(task.detail);
       setDone(task.done);
+      setLimit(task.limit);
     }
   }, [task]);
 
@@ -44,7 +48,13 @@ const EditTask = () => {
 
       setIsSubmitting(true);
 
-      void dispatch(updateTask({ id: taskId, title, detail, done }))
+      let limitISO = "";
+      if (limit) {
+        const date = new Date(limit);
+        limitISO = limit.length === 16 ? date.toISOString() : "";
+      }
+
+      void dispatch(updateTask({ id: taskId, title, detail, done, limit: limitISO }))
         .unwrap()
         .then(() => {
           navigate(`/lists/${listId}`);
@@ -56,7 +66,7 @@ const EditTask = () => {
           setIsSubmitting(false);
         });
     },
-    [title, taskId, listId, detail, done],
+    [title, taskId, listId, detail, done, limit],
   );
 
   const handleDelete = useCallback(() => {
@@ -89,7 +99,7 @@ const EditTask = () => {
           <label htmlFor={`${id}-title`} className="edit_list__form_label">
             Title
           </label>
-          <input
+          <Input
             id={`${id}-title`}
             className="app_input"
             placeholder="Buy some milk"
@@ -113,8 +123,14 @@ const EditTask = () => {
           <label htmlFor={`${id}-done`} className="edit_list__form_label">
             Is Done
           </label>
+          <Input
+            id={`${id}-limit`}
+            type="datetime-local"
+            value={limit}
+            onChange={(event) => setLimit(event.target.value)}
+          />
           <div>
-            <input
+            <Input
               id={`${id}-done`}
               type="checkbox"
               checked={done}
@@ -127,17 +143,17 @@ const EditTask = () => {
             Cancel
           </Link>
           <div className="edit_list__form_actions_spacer"></div>
-          <button
+          <Button
             type="button"
             className="app_button edit_list__form_actions_delete"
             disabled={isSubmitting}
             onClick={handleDelete}
           >
             Delete
-          </button>
-          <button type="submit" className="app_button" disabled={isSubmitting}>
+          </Button>
+          <Button type="submit" className="app_button" disabled={isSubmitting}>
             Update
-          </button>
+          </Button>
         </div>
       </form>
     </main>

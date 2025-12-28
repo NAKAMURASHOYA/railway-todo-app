@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import './index.css';
 import { useSignup } from '~/hooks/useSignup';
 import { useId } from '~/hooks/useId';
+import Button from '~/components/Button.jsx';
+import Input from '~/components/Input.jsx';
 
 const SignUp = () => {
   const auth = useSelector((state) => state.auth.token !== null);
@@ -48,7 +50,7 @@ const SignUp = () => {
           <label htmlFor={`${id}-email`} className="signup__form_label">
             E-mail Address
           </label>
-          <input
+          <Input
             id={`${id}-email`}
             autoComplete="email"
             className="app_input"
@@ -64,7 +66,7 @@ const SignUp = () => {
           >
             Name
           </label>
-          <input
+          <Input
             id={`${id}-name`}
             type="text"
             className="app_input"
@@ -80,7 +82,7 @@ const SignUp = () => {
           >
             Password
           </label>
-          <input
+          <Input
             id={`${id}-password`}
             type="password"
             className="app_input"
@@ -93,9 +95,9 @@ const SignUp = () => {
             Login
           </Link>
           <div className="signup__form_actions_spacer"></div>
-          <button type="submit" className="app_button" disabled={isSubmitting}>
+          <Button type="submit" className="app_button" disabled={isSubmitting}>
             Register
-          </button>
+          </Button>
         </div>
       </form>
     </main>

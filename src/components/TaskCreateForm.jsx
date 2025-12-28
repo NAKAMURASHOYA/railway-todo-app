@@ -1,8 +1,10 @@
-import { useCallback, useEffect, useState, useRef } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import './TaskCreateForm.css';
 import { CheckIcon } from '~/icons/CheckIcon';
 import { createTask } from '~/store/task';
+import Button from '~/components/Button.jsx';
+import Input from '~/components/Input.jsx';
 
 export const TaskCreateForm = () => {
   const dispatch = useDispatch();
@@ -15,6 +17,7 @@ export const TaskCreateForm = () => {
   const [title, setTitle] = useState('');
   const [detail, setDetail] = useState('');
   const [done, setDone] = useState(false);
+  const [limit, setLimit] = useState('');
 
   const handleToggle = useCallback(() => {
     setDone((prev) => !prev);
@@ -46,6 +49,7 @@ export const TaskCreateForm = () => {
     setDetail('');
     setFormState('initial');
     setDone(false);
+    setLimit('');
   }, []);
 
   const onSubmit = useCallback(
@@ -54,7 +58,20 @@ export const TaskCreateForm = () => {
 
       setFormState('submitting');
 
-      void dispatch(createTask({ title, detail, done }))
+      let limitISO = "";
+      if (limit) {
+        const date = new Date(limit);
+        limitISO = limit.length === 16 ? date.toISOString() : "";
+      }
+
+      console.log({
+        title,
+        detail,
+        done,
+        limit: limitISO
+      });
+
+      void dispatch(createTask({ title, detail, done, limit: limitISO }))
         .unwrap()
         .then(() => {
           handleDiscard();
@@ -64,7 +81,7 @@ export const TaskCreateForm = () => {
           setFormState('focused');
         });
     },
-    [title, detail, done],
+    [title, detail, done, limit],
   );
 
   useEffect(() => {
@@ -93,13 +110,14 @@ export const TaskCreateForm = () => {
       data-state={formState}
     >
       <div className="task_create_form__title_container">
-        <button
+        <Button
           type="button"
           onClick={handleToggle}
           className="task_create_form__mark_button"
           onFocus={handleFocus}
           onBlur={handleBlur}
         >
+
           {done ? (
             <div
               className="task_create_form__mark____complete"
@@ -113,13 +131,22 @@ export const TaskCreateForm = () => {
               aria-label="Incomplete"
             ></div>
           )}
-        </button>
-        <input
+        </Button>
+        <Input
           type="text"
           className="task_create_form__title"
           placeholder="Add a new task..."
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          disabled={formState === 'submitting'}
+        />
+        <Input
+          type="datetime-local"
+          className="task_create_form__limit"
+          value={limit}
+          onChange={(e) => setLimit(e.target.value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
           disabled={formState === 'submitting'}
@@ -138,7 +165,7 @@ export const TaskCreateForm = () => {
             disabled={formState === 'submitting'}
           />
           <div className="task_create_form__actions">
-            <button
+            <Button
               type="button"
               className="app_button"
               data-variant="secondary"
@@ -147,16 +174,16 @@ export const TaskCreateForm = () => {
               disabled={(!title && !detail) || formState === 'submitting'}
             >
               Discard
-            </button>
+            </Button>
             <div className="task_create_form__spacer"></div>
-            <button
+            <Button
               type="submit"
               className="app_button"
               onBlur={handleBlur}
               disabled={!title || !detail || formState === 'submitting'}
             >
               Add
-            </button>
+            </Button>
           </div>
         </div>
       )}

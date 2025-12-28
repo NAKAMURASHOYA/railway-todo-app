@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { PlusIcon } from '~/icons/PlusIcon';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLogout } from '~/hooks/useLogout';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { fetchLists } from '~/store/list/index';
 
 export const Sidebar = () => {

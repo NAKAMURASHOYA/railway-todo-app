@@ -1,4 +1,6 @@
+import React from 'react';
 import { ChevronIcon } from '~/icons/ChevronIcon';
+import Button from './Button.jsx';
 import './BackButton.css';
 
 const handleClick = () => {
@@ -7,9 +9,9 @@ const handleClick = () => {
 
 export const BackButton = () => {
   return (
-    <button type="button" onClick={handleClick} className="back_button">
+    <Button onClick={handleClick}>
       <ChevronIcon className="back_button__icon" />
       Back
-    </button>
+    </Button>
   );
 };
